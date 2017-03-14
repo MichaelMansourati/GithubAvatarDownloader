@@ -15,18 +15,20 @@ function getRepoContributors(repoOwner, repoName, cb) {
     response.setEncoding('utf8');
     console.log('Response Status Code:', response.statusCode);
     var responseBody = JSON.parse(response.body);
-    // debugger
     responseBody.forEach(function(githubUser) {
-      var filepath = "avatars2/" + githubUser.login + ".jpg";
+      var filepath = "avatars/" + githubUser.login + ".jpg"; //folder must be already created
       downloadImageByURL(githubUser.avatar_url, filepath);
     })
   });
 }
 
 var args = process.argv.slice(2);
+if (!args[1] || args[2]) {
+  console.log('Strictly two arguments required, please try again.');
+} else {
+ getRepoContributors(args[0], args[1], function(err, result) {});
+}
 
-
-getRepoContributors(args[0], args[1], function(err, result) {});
 
 function downloadImageByURL (url, filePath) {
   request(url).pipe(fs.createWriteStream(filePath));
